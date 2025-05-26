@@ -51,18 +51,28 @@ if __name__ == "__main__":
                     print(Fore.RED + "Please enter a positive number." + Style.RESET_ALL)
             except ValueError:
                 print(Fore.RED + "Invalid input. Please enter a valid number." + Style.RESET_ALL)
+        
+        while True:
+            file_name = input(f"Enter the name of the file to save the wallets (without format file): ")
+            if file_name.strip() == "":
+                file_name = menu[input_chain - 1].split()[1]+ "_wallets"
+                break
+            elif len(file_name) > 0:
+                break
+            else:
+                print(Fore.RED + "File name cannot be empty." + Style.RESET_ALL)
 
         result_print = (f"You selected to generate {Fore.GREEN + Style.BRIGHT}{num_wallets}{Style.RESET_ALL} wallets"
                 f" for {Fore.GREEN + Style.BRIGHT}{menu[input_chain - 1].split()[1]} Network{Style.RESET_ALL}.\n")
-        
-        return input_chain, num_wallets, result_print
+
+        return input_chain, num_wallets, result_print, file_name
 
     generator = eth_wallet_generator()
-    input_chain, num_wallets, result_print = main_menu()
+    input_chain, num_wallets, result_print, file_name = main_menu()
     print_banner()
     print(result_print)
 
     wallets = generator.generate_batch_eth_wallets(num_wallets=num_wallets)
-    generator.export_wallets_to_csv(wallets, filename="80_eth_wallets")
-    generator.export_wallets_to_excel(wallets, filename="80_eth_wallets")
+    generator.export_wallets_to_csv(wallets, filename=file_name)
+    generator.export_wallets_to_excel(wallets, filename=file_name)
     print("")
